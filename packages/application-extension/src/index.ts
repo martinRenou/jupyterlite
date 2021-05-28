@@ -15,17 +15,15 @@ import {
   ProviderMock
 } from '@jupyterlab/docprovider';
 
-import { WebsocketProvider } from 'y-websocket';
+import { WebrtcProvider } from 'y-webrtc';
 
 import { IMainMenu } from '@jupyterlab/mainmenu';
 
 import { ITranslator, TranslationManager } from '@jupyterlab/translation';
 
-const YJS_WEBSOCKET_URL = 'wss://demos.yjs.dev';
-
-class WebSocketProvider extends WebsocketProvider implements IDocumentProvider {
+class WebRtcProvider extends WebrtcProvider implements IDocumentProvider {
   constructor(options: IDocumentProviderFactory.IOptions) {
-    super(YJS_WEBSOCKET_URL, options.guid, options.ymodel.ydoc);
+    super(options.guid, options.ymodel.ydoc);
   }
   requestInitialContent(): Promise<boolean> {
     return Promise.resolve(true);
@@ -55,9 +53,9 @@ const docProviderPlugin: JupyterFrontEndPlugin<IDocumentProviderFactory> = {
   id: '@jupyterlite/application-extension:docprovider',
   provides: IDocumentProviderFactory,
   activate: (app: JupyterFrontEnd): IDocumentProviderFactory => {
-    const collaborative = PageConfig.getOption('collaborative');
+    const collaborative = PageConfig.getOption('collaborative') === 'true';
     const factory = (options: IDocumentProviderFactory.IOptions): IDocumentProvider => {
-      return collaborative ? new WebSocketProvider(options) : new ProviderMock();
+      return collaborative ? new WebRtcProvider(options) : new ProviderMock();
     };
     return factory;
   }
