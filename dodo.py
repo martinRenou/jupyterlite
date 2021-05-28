@@ -708,6 +708,9 @@ class U:
             C.DOCS_DISABLED_EXT
         )
 
+        # enable RTC
+        config["jupyter-config-data"]["collaborative"] = True
+
         print(f"... writing {B.PATCHED_JUPYTERLITE_JSON}")
         B.PATCHED_JUPYTERLITE_JSON.write_text(
             textwrap.indent(json.dumps(config, indent=2, sort_keys=True), " " * 4)
