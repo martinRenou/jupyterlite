@@ -21,24 +21,10 @@ import { ITranslator, TranslationManager } from '@jupyterlab/translation';
 
 import { WebrtcProvider } from 'y-webrtc';
 
-import * as math from 'lib0/math';
-
-import * as random from 'lib0/random';
-
 class WebRtcProvider extends WebrtcProvider implements IDocumentProvider {
   constructor(options: IDocumentProviderFactory.IOptions) {
-    super(options.guid, options.ymodel.ydoc, {
-      signaling: [
-        'wss://signaling.yjs.dev',
-        'wss://y-webrtc-signaling-eu.herokuapp.com',
-        'wss://y-webrtc-signaling-us.herokuapp.com'
-      ],
-      password: null,
-      awareness: options.ymodel.awareness,
-      maxConns: 20 + math.floor(random.rand() * 15),
-      filterBcConns: true,
-      peerOpts: {}
-    });
+    super(options.guid, options.ymodel.ydoc);
+    this.awareness = options.ymodel.awareness;
   }
   requestInitialContent(): Promise<boolean> {
     return Promise.resolve(true);
