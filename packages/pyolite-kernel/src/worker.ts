@@ -5,6 +5,8 @@ import { DriveFS } from '@jupyterlite/contents';
 
 import { IPyoliteWorkerKernel } from './tokens';
 
+console.log('hello there');
+
 // TODO Once this https://github.com/pyodide/pyodide/pull/2582/files is released
 // Remove this shameless copy
 const ERRNO_CODES = {

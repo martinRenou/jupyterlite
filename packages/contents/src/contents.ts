@@ -340,6 +340,7 @@ export class Contents implements IContents {
         type: 'directory',
       };
     }
+    console.log('get', model);
     return model;
   }
 
@@ -441,6 +442,35 @@ export class Contents implements IContents {
         };
       }
     }
+
+    // Compute file size
+    if (item.content) {
+      switch (item.format) {
+        case 'base64':
+          item = {
+            ...item,
+            size: ((4 * item.content.length / 3) + 3) & ~3
+          }
+          console.log('base 64', item.content);
+          break;
+        case 'json':
+          item = {
+            ...item,
+            size: JSON.stringify(item.content).length
+          }
+          break;
+        case 'text':
+          item = {
+            ...item,
+            size: item.content.length
+          }
+          break;
+        default:
+          break;
+      }
+    }
+
+    console.log('saving item', item);
 
     await (await this.storage).setItem(path, item);
     return item;

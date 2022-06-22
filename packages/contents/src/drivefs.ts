@@ -231,6 +231,7 @@ export class DriveFSEmscriptenNodeOps implements IEmscriptenNodeOps {
 
   setattr(node: IEmscriptenFSNode, attr: IStats): void {
     // TODO
+    console.log('setattr', node, attr);
   }
 
   lookup(parent: IEmscriptenFSNode, name: string): IEmscriptenFSNode {

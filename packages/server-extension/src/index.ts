@@ -304,7 +304,8 @@ const emscriptenFileSystemPlugin: JupyterLiteServerPlugin<void> = {
           break;
         }
         case 'getattr': {
-          model = await contentManager.get(path);
+          // Need to request the content for computing the bytes size
+          model = await contentManager.get(path, { content: true });
 
           broadcast.postMessage({
             dev: 0,
