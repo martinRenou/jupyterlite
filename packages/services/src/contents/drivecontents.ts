@@ -216,7 +216,10 @@ export class DriveContentsProcessor implements IDriveContentsProcessor {
   async get(request: TDriveRequest<'get'>): Promise<TDriveResponse<'get'>> {
     let model: Contents.IModel;
     try {
-      model = await this.contentsManager.get(request.path, { content: true });
+      model = await this.contentsManager.get(request.path, {
+        content: true,
+        format: 'base64',
+      });
     } catch {
       return null;
     }
@@ -225,9 +228,9 @@ export class DriveContentsProcessor implements IDriveContentsProcessor {
 
     if (model.type !== 'directory') {
       response = {
-        content:
-          model.format === 'json' ? JSON.stringify(model.content) : model.content,
-        format: model.format,
+        content: model.content,
+        // This is deprecated and we should assume base64 from now on, but we still provide it as a response for old kernels support
+        format: 'base64' as Contents.FileFormat,
       };
     }
 
@@ -236,12 +239,9 @@ export class DriveContentsProcessor implements IDriveContentsProcessor {
 
   async put(request: TDriveRequest<'put'>): Promise<TDriveResponse<'put'>> {
     await this.contentsManager.save(request.path, {
-      content:
-        request.data.format === 'json' && request.data.data
-          ? JSON.parse(request.data.data)
-          : request.data.data,
+      content: request.data.data,
       type: 'file',
-      format: request.data.format as Contents.FileFormat,
+      format: 'base64',
     });
     return null;
   }

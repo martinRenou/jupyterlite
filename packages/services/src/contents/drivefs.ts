@@ -63,9 +63,10 @@ export type TDriveData = {
     data: any;
 
     /**
+     * @deprecated All content going through the Emscripten-FS will be base64 from now on
      * The file content format
      */
-    format: Contents.FileFormat;
+    format?: Contents.FileFormat;
   };
 };
 
@@ -109,9 +110,10 @@ type TDriveResponses = {
     content: any;
 
     /**
+     * @deprecated All content going through the Emscripten-FS will be base64 from now on
      * The content format
      */
-    format: Contents.FileFormat;
+    format?: Contents.FileFormat;
   } | null;
   put: null;
 };
@@ -506,7 +508,7 @@ export abstract class ContentsAPI {
     }
 
     const serializedContent = response.content;
-    const format: 'json' | 'text' | 'base64' | null = response.format;
+    const format: 'json' | 'text' | 'base64' = response.format ?? 'base64';
 
     switch (format) {
       case 'json':
@@ -533,7 +535,7 @@ export abstract class ContentsAPI {
   }
 
   put(path: string, value: DriveFS.IFile): null {
-    switch (value.format) {
+    switch (value.format ?? 'base64') {
       case 'json':
       case 'text':
         return this.request({
@@ -795,7 +797,11 @@ export namespace DriveFS {
    */
   export interface IFile {
     data: Uint8Array;
-    format: 'json' | 'text' | 'base64';
+
+    /**
+     * @deprecated All content going through the Emscripten-FS will be base64 from now on
+     */
+    format?: 'json' | 'text' | 'base64';
   }
 
   /**
